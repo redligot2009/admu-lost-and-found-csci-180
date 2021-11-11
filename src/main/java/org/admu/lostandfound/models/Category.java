@@ -26,6 +26,44 @@ public class Category {
     private Date createdDate;
 
     @NotNull
-    @Column(name="updated_date", nullable = false)
+    @Column(name="updated_date")
     private Date updatedDate;
+
+    public Category(String title, User admin, Date createdDate) {
+        this.title = title;
+        this.admin = admin;
+        this.createdDate = createdDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public User getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(User admin) {
+        this.admin = admin;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 }

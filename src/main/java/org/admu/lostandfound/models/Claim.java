@@ -23,4 +23,34 @@ public class Claim {
     @NotNull
     @Column(name="created_date", nullable = false)
     private Date createdDate;
+
+    public Claim(User claimer, LostItem lostItem, Date createdDate) {
+        this.claimer = claimer;
+        this.lostItem = lostItem;
+        this.createdDate = createdDate;
+    }
+
+    public User getClaimer() {
+        return claimer;
+    }
+
+    public void setClaimer(User claimer) {
+        this.claimer = claimer;
+    }
+
+    public LostItem getLostItem() {
+        return lostItem;
+    }
+
+    public void setLostItem(LostItem lostItem) {
+        this.lostItem = lostItem;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 }

@@ -12,6 +12,6 @@ import java.util.Date;
 public interface LostItemRepository extends JpaRepository<LostItem, Long> {
     public List<LostItem> findByCategory(Category category);
     public List<LostItem> findByLocation(Location location);
-    public List<LostItem> findByStatus(String status);
+    public List<LostItem> findByItemStatus(String itemStatus);
     public List<LostItem> findByDate(Date date);
 }

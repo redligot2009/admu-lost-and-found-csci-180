@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ClaimRepository extends JpaRepository<Claim, Long> {
-    public List<Claim> findByUser(User claimer);
+    public List<Claim> findByClaimer(User claimer);
     public List<Claim> findByLostItem(LostItem item);
 }

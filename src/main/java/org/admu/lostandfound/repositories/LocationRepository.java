@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    public Location findByBuildingAndRoom(String buildingName, String roomName);
-    public List<Location> findByBuilding(String buildingName);
+    public Location findByBuildingNameAndRoomName(String buildingName, String roomName);
+    public List<Location> findByBuildingName(String buildingName);
 
 }

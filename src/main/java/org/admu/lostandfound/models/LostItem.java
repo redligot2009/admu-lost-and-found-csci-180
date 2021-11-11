@@ -23,6 +23,10 @@ public class LostItem {
     @Column(name="description", nullable = false)
     private String description;
 
+    @NotEmpty
+    @Column(name="item_status", nullable = false)
+    private String itemStatus;
+
     @NotNull
     @Column(name="date", nullable = false)
     private Date date;
@@ -37,6 +41,10 @@ public class LostItem {
 
     @OneToMany(mappedBy = "lostItem")
     private Set<Claim> claims;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public LostItem(String title, String description, Date date, Time time, Location location) {
         this.title = title;

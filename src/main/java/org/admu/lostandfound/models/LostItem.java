@@ -2,9 +2,8 @@ package org.admu.lostandfound.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
@@ -27,13 +26,11 @@ public class LostItem {
     @Column(name="item_status", nullable = false)
     private String itemStatus;
 
-    @NotNull
     @Column(name="date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
-    @NotNull
     @Column(name="time", nullable = false)
-    private Time time;
+    private LocalTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
@@ -46,9 +43,10 @@ public class LostItem {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public LostItem(String title, String description, Date date, Time time, Location location) {
+    public LostItem(String title, String description, String itemStatus, LocalDate date, LocalTime time, Location location) {
         this.title = title;
         this.description = description;
+        this.itemStatus = itemStatus;
         this.date = date;
         this.time = time;
         this.location = location;
@@ -70,19 +68,19 @@ public class LostItem {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Time getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 

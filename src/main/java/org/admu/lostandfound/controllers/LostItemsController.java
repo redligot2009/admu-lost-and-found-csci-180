@@ -1,28 +1,49 @@
 package org.admu.lostandfound.controllers;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
+import org.admu.lostandfound.components.LostItemsComponent;
+import org.admu.lostandfound.models.LostItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Date;
+import java.util.Map;
 
 @Component
 @Path("/api")
 public class LostItemsController {
+
+	@Autowired
+	private LostItemsComponent lostItemsComponent;
 	
 	@GET
 	@Path("/postings")
-	public String getLostItems() {
-		return "found items";
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getLostItems(
+			@QueryParam("item_title") String title,
+			@QueryParam("item_description") String description,
+			@QueryParam("item_status") String itemStatus,
+			@QueryParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
+			@QueryParam("category") Integer categoryId,
+			@QueryParam("location") Integer locationId
+	) {
+		return "lost items";
 	}
 	
 	@POST
 	@Path("/postings")
-	public String newLostItem() {
-		return "posted Item";
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public LostItem newLostItem(
+			@RequestBody Map<String,Object> body
+	) {
+		return lostItemsComponent.newLostItem(body);
 	}
+
 	
 	@GET
 	@Path("/postings/{id}")

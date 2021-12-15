@@ -18,6 +18,8 @@ public class Location {
     @Column(name="building_name", nullable = false)
     private String buildingName;
 
+    public Location() {}
+
     public Location(String roomName, String buildingName) {
         this.roomName = roomName;
         this.buildingName = buildingName;

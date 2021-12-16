@@ -51,6 +51,11 @@ public class ClaimsComponent
 	
 	public Claim[] retrieveClaimsByClaimer(User claimer)
 	{
+//		Optional List<Claim>getList Claim = claimRepo.findById(claimer);
+//		if (Claim.isPresent())
+//		{
+//			return Claim.get();
+//		}
 		return null;
 	}
 	

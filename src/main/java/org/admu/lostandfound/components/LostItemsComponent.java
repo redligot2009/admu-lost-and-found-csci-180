@@ -30,12 +30,6 @@ public class LostItemsComponent
 	@Autowired
 	private LostItemRepository lostItemRepo;
 
-
-	public LostItem[] retrieveByCategory(Category category)
-	{
-		return null;
-	}
-
 	public LostItem newLostItem(Map<String, Object> body) {
 
 		// Get foreign key objects
@@ -121,4 +115,18 @@ public class LostItemsComponent
 		LostItem savedItem = lostItemRepo.save(lostItem);
 		return savedItem;
 	}
+	public LostItem deleteLostItemByID(Long id) {
+		LostItem lostItem = getLostItemByID(id);
+		if (lostItem != null) {
+			lostItemRepo.delete(lostItem);
+			return lostItem;
+		}
+		return null;
+	}
+
+	public LostItem[] retrieveByCategory(Category category) {
+		return null;
+	}
+
+
 }

@@ -56,4 +56,10 @@ public class LostItemsController {
 		return lostItemsComponent.updateLostItemByID(id, body);
 	}
 
+	@DELETE
+	@Path("/postings/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public LostItem deleteLostItemByID(@PathParam("id") Long id) {
+		return lostItemsComponent.deleteLostItemByID(id);
+	}
 }

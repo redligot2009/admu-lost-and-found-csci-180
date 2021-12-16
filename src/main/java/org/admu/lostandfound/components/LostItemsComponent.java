@@ -36,45 +36,37 @@ public class LostItemsComponent
 		return null;
 	}
 
-//	public LostItem[] getLostItems(
-//			String title,
-//			String description,
-//			String itemStatus,
-//			Date date,
-//			Integer categoryId,
-//			Integer locationId
-//	) {
-//
-//	}
 	public LostItem newLostItem(Map<String, Object> body) {
 
-		// String attributes
-		String title = body.get("title").toString();
-		String description = body.get("description").toString();
-		String itemStatus = body.get("itemStatus").toString();
-
-		// Dates - default is now
-		LocalDate date = LocalDate.now();
-		System.out.println(date);
-		LocalTime time = LocalTime.now();
-
-		// Foreign keys
-		Long locationId = Long.valueOf(body.get("locationId").toString());
-		Optional<Location> foundLocation = locationRepo.findById(locationId);
-		Location location = null;
-		if (foundLocation.isPresent()) {
-			location = foundLocation.get();
+		// Get foreign key objects
+		Location location = null; // null by default
+		if (body.get("locationId") != null) {
+			Long locationId = Long.valueOf(body.get("locationId").toString());
+			Optional<Location> foundLocation = locationRepo.findById(locationId);
+			if (foundLocation.isPresent()) {
+				location = foundLocation.get();
+			}
 		}
 
-		Long categoryId = Long.valueOf(body.get("categoryId").toString());
-		Optional<Category> foundCategory = categoryRepo.findById(categoryId);
-		Category category = null;
-		if (foundCategory.isPresent()) {
-			category = foundCategory.get();
+		Category category = null; // null by default
+		if (body.get("categoryId") != null) {
+			Long categoryId = Long.valueOf(body.get("categoryId").toString());
+			Optional<Category> foundCategory = categoryRepo.findById(categoryId);
+			if (foundCategory.isPresent()) {
+				category = foundCategory.get();
+			}
 		}
 
 		// Save new lost item
-		LostItem lostItem = new LostItem(title, description, itemStatus, date, time, location, category);
+		LostItem lostItem = new LostItem(
+				body.get("title").toString(),
+				body.get("description").toString(),
+				body.get("itemStatus").toString(),
+				LocalDate.now(),
+				LocalTime.now(),
+				location,
+				category
+		);
 		lostItemRepo.save(lostItem);
 		return lostItem;
 	}
@@ -85,8 +77,48 @@ public class LostItemsComponent
 		}
 		return null;
 	}
+	public LostItem updateLostItemByID(Long id, Map<String, Object> body) {
 
-//	public String updateLostItemByID(Long id, Map<String, Object> body) {
-//
-//	}
+		// Get foreign keys objects
+		Location location = null; // null by default
+		if (body.get("locationId") != null) {
+			Long locationId = Long.valueOf(body.get("locationId").toString());
+			Optional<Location> foundLocation = locationRepo.findById(locationId);
+			if (foundLocation.isPresent()) {
+				location = foundLocation.get();
+			}
+		}
+
+		Category category = null; // null by default
+		if (body.get("categoryId") != null) {
+			Long categoryId = Long.valueOf(body.get("categoryId").toString());
+			Optional<Category> foundCategory = categoryRepo.findById(categoryId);
+			if (foundCategory.isPresent()) {
+				category = foundCategory.get();
+			}
+		}
+
+		// Get existing row
+		Optional<LostItem> foundLostItem = lostItemRepo.findById(id);
+		LostItem lostItem;
+
+		if (foundLostItem.isPresent()) {
+			lostItem = foundLostItem.get();
+		} else {
+			return null; // just return null if it doesn't exist
+		}
+
+		// set new fields
+		lostItem.setTitle(body.get("title").toString());
+		lostItem.setDescription(body.get("description").toString());
+		lostItem.setItemStatus(body.get("itemStatus").toString());
+		lostItem.setDate(LocalDate.now());
+		lostItem.setTime(LocalTime.now());
+		lostItem.setLocation(location);
+		lostItem.setCategory(category);
+
+		// save and return
+		LostItem savedItem = lostItemRepo.save(lostItem);
+		return savedItem;
+	}
 }

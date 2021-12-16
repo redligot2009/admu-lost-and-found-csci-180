@@ -48,12 +48,12 @@ public class LostItemsController {
 	public LostItem getLostItemByID(@PathParam("id") Long id) {
 		return lostItemsComponent.getLostItemByID(id);
 	}
-//
-//	@PUT
-//	@Path("/postings/{id}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
-//		return lostItemsComponent.updateLostItemByID(id, body);
-//	}
+
+	@PUT
+	@Path("/postings/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public LostItem updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
+		return lostItemsComponent.updateLostItemByID(id, body);
+	}
 
 }

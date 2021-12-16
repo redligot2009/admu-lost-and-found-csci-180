@@ -30,11 +30,15 @@ public class ClaimsController
         return "JSON";
     }
 
-//    @DELETE
-//    @Path("/claims/{id}")
-//    {
-//
-//    }
+
+    @DELETE
+    @Path("/claims/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Claim deleteClaimById(@PathParam("id") Long claimID) {
+        Claim claim = claimsComp.closeClaim(claimID);
+        return claim;
+    }
+
 
 //    @POST
 //    @Path("/claims")

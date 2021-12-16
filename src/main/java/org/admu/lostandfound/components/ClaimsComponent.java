@@ -25,12 +25,17 @@ public class ClaimsComponent
 		return null;
 	}
 	
-	public Claim closeClaim(int claimID)
+	public Claim closeClaim(long claimID)
 	{
+		Claim Claim = retrieveClaimByID(claimID);
+		if (Claim != null) {
+			claimRepo.delete(Claim);
+			return Claim;
+		}
 		return null;
 	}
 
-	public Claim retrieveClaimByID(int claimID)
+	public Claim retrieveClaimByID(long claimID)
 	{
 		return null;
 	}
@@ -45,21 +50,5 @@ public class ClaimsComponent
 		return null;
 	}
 
-//	public Claim newClaim(Map<String, Object> body) {
-//
-//		// Dates - default is now
-//		LocalDate created_date = LocalDate.now();
-//		System.out.println(created_date);
-//
-//		// Foreign key
-//		Long claimer_id = Long.valueOf(body.get("locationId").toString());
-//
-//		Long lost_item = Long.valueOf(body.get("lost item").toString());
-//
-//		// Save new lost item
-//		Claim Claim = new Claim(claimer_id, lost_item, created_date);
-//		claimRepo.save(lostItem);
-//		return lostItem;
-//	}
 
 }

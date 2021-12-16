@@ -1,32 +1,62 @@
 package org.admu.lostandfound.components;
 
 import org.admu.lostandfound.models.Location;
+import org.admu.lostandfound.repositories.LocationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class LocationsComponent 
 {
 
 	// Repository @Autowire here
+	@Autowired
+	LocationRepository locationRepo;
 	
-	
-	public Location getLocation(String title, String buildingName, String roomName)
+	public Location getLocation(String buildingName, String roomName)
 	{
-		return null;
+		Location foundLocation = locationRepo.findByBuildingNameAndRoomName(buildingName,roomName);
+		return foundLocation;
 	}
 	
-	public Location postLocation(String title, String buildingName, String roomName)
+	public Location postLocation(String title, String buildingName, String roomName, String description)
 	{
-		return null;
+		Location newLocation = new Location();
+		newLocation.setTitle(title);
+		newLocation.setBuildingName(buildingName);
+		newLocation.setRoomName(roomName);
+		newLocation.setDescription(description);
+
+		newLocation = locationRepo.save(newLocation);
+		return newLocation;
 	}
 	
-	public Location putLocation(Integer id, String buildingName, String roomName)
+	public Location putLocation(Long id, String buildingName, String roomName)
 	{
-		return null;
+
+		Optional<Location> savedLocation = locationRepo.findById(id);
+
+		if(savedLocation.isPresent()){
+			Location updateLocation = savedLocation.get();
+			updateLocation.setBuildingName(buildingName);
+			updateLocation.setRoomName(roomName);
+			updateLocation = locationRepo.save(updateLocation);
+			return updateLocation;
+		}
+
+		return savedLocation.orElse(null);
 	}
 	
-	public Location deleteLocation(Integer id)
+	public Location deleteLocation(Long id)
 	{
+		Optional<Location> deleteLocation = locationRepo.findById(id);
+
+		if(deleteLocation.isPresent()) {
+			locationRepo.deleteById(id);
+			return deleteLocation.get();
+		}
 		return null;
 	}
 	

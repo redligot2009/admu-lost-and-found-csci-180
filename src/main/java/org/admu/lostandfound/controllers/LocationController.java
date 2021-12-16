@@ -1,39 +1,66 @@
 package org.admu.lostandfound.controllers;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.print.attribute.standard.Media;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
+import org.admu.lostandfound.components.LocationsComponent;
+import org.admu.lostandfound.models.Location;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @Path("/api")
 public class LocationController {
-	
+
+
+	@Autowired
+	LocationsComponent locationsComponent;
+
 	@GET
 	@Path("/location")
-	public String getLocation() {
-		return "found location";
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Location getLocation(Location locationReq) {
+		Location location = locationsComponent.getLocation(
+				locationReq.getBuildingName(),
+				locationReq.getRoomName());
+		return location;
 	}
 	
 	@POST
 	@Path("/location")
-	public String newLocation() {
-		return "new location";
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Location newLocation(Location locationReq) {
+
+		Location location = locationsComponent.postLocation(
+				locationReq.getTitle(),
+				locationReq.getBuildingName(),
+				locationReq.getRoomName(),
+				locationReq.getDescription()
+		);
+		return location;
 	}
 	
 	@PUT
 	@Path("/location/{id}")
-	public String getLocationById(@PathParam("id") Integer id) {
-		return "Found Location by ID";
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Location getLocationById(@PathParam("id") Long id, Location locationReq) {
+
+		Location location = locationsComponent.putLocation(id,locationReq.getBuildingName(), locationReq.getRoomName());
+		return location;
+
 	}
 	
 	@DELETE
 	@Path("/location/{id}")
-	public String deleteLocationById(@PathParam("id") Integer id) {
-		return "Deleted Location by ID";
+	@Produces(MediaType.APPLICATION_JSON)
+	public Location deleteLocationById(@PathParam("id") Long id) {
+		Location location = locationsComponent.deleteLocation(id);
+		return location;
 	}
 }

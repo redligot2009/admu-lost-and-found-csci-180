@@ -32,24 +32,35 @@ public class LostItem {
     @Column(name="time", nullable = false)
     private LocalTime time;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
 
     @OneToMany(mappedBy = "lostItem")
     private Set<Claim> claims;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public LostItem(String title, String description, String itemStatus, LocalDate date, LocalTime time, Location location) {
+    public LostItem() {}
+
+    public LostItem(
+            String title,
+            String description,
+            String itemStatus,
+            LocalDate date,
+            LocalTime time,
+            Location location,
+            Category category
+    ) {
         this.title = title;
         this.description = description;
         this.itemStatus = itemStatus;
         this.date = date;
         this.time = time;
         this.location = location;
+        this.category = category;
     }
 
     public String getTitle() {
@@ -91,4 +102,12 @@ public class LostItem {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public String getItemStatus() { return itemStatus; }
+
+    public void setItemStatus(String itemStatus) { this.itemStatus = itemStatus; }
+
+    public Category getCategory() { return category; }
+
+    public void setCategory(Category category) { this.category = category; }
 }

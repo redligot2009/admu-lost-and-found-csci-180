@@ -38,23 +38,22 @@ public class LostItemsController {
 	@Path("/postings")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public LostItem newLostItem(
-			@RequestBody Map<String,Object> body
-	) {
+	public LostItem newLostItem(@RequestBody Map<String,Object> body) {
 		return lostItemsComponent.newLostItem(body);
 	}
 
-	
 	@GET
 	@Path("/postings/{id}")
-	public String getLostItemByID(@PathParam("id") Integer id) {
-		return "Item by ID";
+	@Produces(MediaType.APPLICATION_JSON)
+	public LostItem getLostItemByID(@PathParam("id") Long id) {
+		return lostItemsComponent.getLostItemByID(id);
 	}
-	
-	@PUT
-	@Path("/postings/{id}")
-	public String updateLostItemByID(@PathParam("id") Integer id) {
-		return "Updated Item with ID";
-	}
-	
+//
+//	@PUT
+//	@Path("/postings/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public String updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
+//		return lostItemsComponent.updateLostItemByID(id, body);
+//	}
+
 }

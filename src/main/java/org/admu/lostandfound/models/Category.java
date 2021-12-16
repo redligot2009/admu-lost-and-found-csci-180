@@ -17,7 +17,7 @@ public class Category {
     @Column(name="title", nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "admin_id")
     private User admin;
 
@@ -28,6 +28,8 @@ public class Category {
     @NotNull
     @Column(name="updated_date")
     private Date updatedDate;
+
+    public Category() {}
 
     public Category(String title, User admin, Date createdDate) {
         this.title = title;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Component
@@ -27,7 +28,7 @@ public class LostItemsComponent
 	private CategoryRepository categoryRepo;
 
 	@Autowired
-	private LostItemRepository lostItemRepository;
+	private LostItemRepository lostItemRepo;
 
 
 	public LostItem[] retrieveByCategory(Category category)
@@ -35,6 +36,16 @@ public class LostItemsComponent
 		return null;
 	}
 
+//	public LostItem[] getLostItems(
+//			String title,
+//			String description,
+//			String itemStatus,
+//			Date date,
+//			Integer categoryId,
+//			Integer locationId
+//	) {
+//
+//	}
 	public LostItem newLostItem(Map<String, Object> body) {
 
 		// String attributes
@@ -47,13 +58,35 @@ public class LostItemsComponent
 		System.out.println(date);
 		LocalTime time = LocalTime.now();
 
-		// Foreign key
+		// Foreign keys
 		Long locationId = Long.valueOf(body.get("locationId").toString());
-		Location location = locationRepo.findById(locationId).get();
+		Optional<Location> foundLocation = locationRepo.findById(locationId);
+		Location location = null;
+		if (foundLocation.isPresent()) {
+			location = foundLocation.get();
+		}
+
+		Long categoryId = Long.valueOf(body.get("categoryId").toString());
+		Optional<Category> foundCategory = categoryRepo.findById(categoryId);
+		Category category = null;
+		if (foundCategory.isPresent()) {
+			category = foundCategory.get();
+		}
 
 		// Save new lost item
-		LostItem lostItem = new LostItem(title, description, itemStatus, date, time, location);
-		lostItemRepository.save(lostItem);
+		LostItem lostItem = new LostItem(title, description, itemStatus, date, time, location, category);
+		lostItemRepo.save(lostItem);
 		return lostItem;
 	}
+	public LostItem getLostItemByID(Long id) {
+		Optional<LostItem> lostItem = lostItemRepo.findById(id);
+		if (lostItem.isPresent()) {
+			return lostItem.get();
+		}
+		return null;
+	}
+
+//	public String updateLostItemByID(Long id, Map<String, Object> body) {
+//
+//	}
 }

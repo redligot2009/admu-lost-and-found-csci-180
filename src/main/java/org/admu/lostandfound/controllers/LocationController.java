@@ -21,12 +21,11 @@ public class LocationController {
 
 	@GET
 	@Path("/location")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Location getLocation(Location locationReq) {
-		Location location = locationsComponent.getLocation(
-				locationReq.getBuildingName(),
-				locationReq.getRoomName());
+	public Location getLocation(@QueryParam("buildingName") String buildingName,
+								@QueryParam("roomName") String roomName) {
+		Location location = locationsComponent.getLocation(buildingName, roomName);
 		return location;
 	}
 	

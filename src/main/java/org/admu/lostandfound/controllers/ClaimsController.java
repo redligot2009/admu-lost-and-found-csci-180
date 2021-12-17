@@ -1,39 +1,55 @@
 package org.admu.lostandfound.controllers;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
+import org.admu.lostandfound.components.ClaimsComponent;
+import org.admu.lostandfound.models.Claim;
+import org.admu.lostandfound.repositories.ClaimRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
 @Component
-@Path("/api")
-public class ClaimsController {
-	
-	
-	@GET
+@Path("/Claims")
+public class ClaimsController
+{
+    @Autowired
+    ClaimsComponent claimsComp;
+
+    @Autowired
+    ClaimRepository claimRepo;
+
+    @GET
+    @Path("/claiming")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getClaims(@QueryParam("item_id") Long item,
+                            @QueryParam("user_id") Long claimer)
+    {
+        return "Here's your claim";
+        // Doesn't account for all Cases yet
+    }
+
+    @DELETE
+    @Path("/claims/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Claim deleteClaims(@PathParam("id") Long claimID)
+    {
+        return claimsComp.closeClaim(claimID);
+    }
+
+    @POST
 	@Path("/claims")
-	public String getClaims () {
-		return "Here's your claim";
+	public String postClaim()
+    {
+		return "Claim posted";
 	}
-	
-	@DELETE
-	@Path("/claims/{id}")
-	public String deleteClaims (@PathParam("id") Integer id) {
-		return "Claim deleted";
-	}
-	
-	@POST
-	@Path("/claims")
-	public String postClaim () {
-		return "Claim posted" ;
-	}
-	
-	@GET
-	@Path("/my_claims")
-	public String myClaims() {
-		return "my claims";
-	}
+
+    @GET
+    @Path("/my_claims")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String myClaims(@QueryParam("item_id") Long item)
+    {
+        return "my claims";
+    }
+
 }

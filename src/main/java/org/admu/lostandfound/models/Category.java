@@ -3,7 +3,7 @@ package org.admu.lostandfound.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="categories")
@@ -17,22 +17,40 @@ public class Category {
     @Column(name="title", nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "admin_id")
     private User admin;
 
     @NotNull
     @Column(name="created_date", nullable = false)
-    private Date createdDate;
+    private LocalDate createdDate;
 
     @NotNull
     @Column(name="updated_date")
-    private Date updatedDate;
+    private LocalDate updatedDate;
 
-    public Category(String title, User admin, Date createdDate) {
+    public Category() {}
+
+    public Category(String title, User admin, LocalDate createdDate) {
         this.title = title;
         this.admin = admin;
         this.createdDate = createdDate;
+    }
+
+    // no-arg constructor
+    public Category() {
+        this.title = null;
+        this.admin = null;
+        this.createdDate = null;
+        this.updatedDate = null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -51,19 +69,30 @@ public class Category {
         this.admin = admin;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getUpdatedDate() {
+    public LocalDate getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(LocalDate updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", admin=" + admin +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                '}';
     }
 }

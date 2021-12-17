@@ -29,6 +29,8 @@ public class Category {
     @Column(name="updated_date")
     private LocalDate updatedDate;
 
+    public Category() {}
+
     public Category(String title, User admin, LocalDate createdDate) {
         this.title = title;
         this.admin = admin;

@@ -1,6 +1,8 @@
 package org.admu.lostandfound.components;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,10 +24,18 @@ public class CategoryComponent
 	@Autowired
 	UserRepository userRepository;
 
-	public Category getCategory(String title){
+	public List<Category> getCategory(String title){
 
+		if(title==null){
+			List<Category> foundCategories = categoryRepository.findAll();
+			return foundCategories;
+		}
+
+		List<Category> foundCategories = new ArrayList<>();
 		Category foundCategory = categoryRepository.findByTitle(title);
-		return foundCategory;
+		foundCategories.add(foundCategory);
+		return foundCategories;
+
 	}
 
 	public Category createNewCategory(Map<String, Object> body, LocalDate createdDate)

@@ -9,6 +9,7 @@ import org.admu.lostandfound.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -21,11 +22,11 @@ public class LocationController {
 
 	@GET
 	@Path("/location")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Location getLocation(@QueryParam("buildingName") String buildingName,
+	public List<Location> getLocation(@QueryParam("buildingName") String buildingName,
 								@QueryParam("roomName") String roomName) {
-		Location location = locationsComponent.getLocation(buildingName, roomName);
+
+		List<Location> location = locationsComponent.getLocation(buildingName, roomName);
 		return location;
 	}
 	

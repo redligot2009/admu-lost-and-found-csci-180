@@ -5,6 +5,8 @@ import org.admu.lostandfound.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -15,10 +17,18 @@ public class LocationsComponent
 	@Autowired
 	LocationRepository locationRepo;
 	
-	public Location getLocation(String buildingName, String roomName)
+	public List<Location> getLocation(String buildingName, String roomName)
 	{
+
+		if(buildingName==null && roomName==null){
+			List<Location> foundLocations = locationRepo.findAll();
+			return foundLocations;
+		}
+		List<Location> foundLocations = new ArrayList<>();
 		Location foundLocation = locationRepo.findByBuildingNameAndRoomName(buildingName,roomName);
-		return foundLocation;
+		foundLocations.add(foundLocation);
+		return foundLocations;
+
 	}
 	
 	public Location postLocation(String title, String buildingName, String roomName, String description)

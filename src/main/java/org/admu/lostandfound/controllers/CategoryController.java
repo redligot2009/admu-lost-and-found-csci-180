@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,14 +22,14 @@ public class CategoryController {
 
 	@GET
 	@Path("/category")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Category getCategory(@QueryParam("title") String title) {
+	public List<Category> getCategoryByTitle(@QueryParam("title") String title) {
 
-		Category category = categoryComponent.getCategory(title);
-		return category;
+		List<Category> categories = categoryComponent.getCategory(title);
+		return categories;
+
 	}
-	
+
 	@POST
 	@Path("/category")
 	@Consumes(MediaType.APPLICATION_JSON)

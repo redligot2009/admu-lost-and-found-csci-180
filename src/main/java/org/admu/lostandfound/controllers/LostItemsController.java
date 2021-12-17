@@ -3,13 +3,12 @@ package org.admu.lostandfound.controllers;
 import org.admu.lostandfound.components.LostItemsComponent;
 import org.admu.lostandfound.models.LostItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,17 +20,15 @@ public class LostItemsController {
 	
 	@GET
 	@Path("/postings")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getLostItems(
-			@QueryParam("item_title") String title,
-			@QueryParam("item_description") String description,
-			@QueryParam("item_status") String itemStatus,
-			@QueryParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
-			@QueryParam("category") Integer categoryId,
-			@QueryParam("location") Integer locationId
+	public List<LostItem> getLostItems(
+			@QueryParam("title") String title,
+			@QueryParam("itemStatus") String itemStatus,
+			@QueryParam("date") String date,
+			@QueryParam("categoryId") Long categoryId,
+			@QueryParam("locationId") Long locationId
 	) {
-		return "lost items";
+		return lostItemsComponent.getLostItems(title, itemStatus, date, categoryId, locationId);
 	}
 	
 	@POST

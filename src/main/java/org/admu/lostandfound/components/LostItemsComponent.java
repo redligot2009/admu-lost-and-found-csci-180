@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,6 +31,29 @@ public class LostItemsComponent
 	@Autowired
 	private LostItemRepository lostItemRepo;
 
+	public List<LostItem> getLostItems(String title, String itemStatus, String date, Long categoryId, Long locationId) {
+		LocalDate dt = LocalDate.parse(date);
+
+		// Get Category
+		Category category = null;
+		if (categoryId != null) {
+			Optional<Category> categoryFound = categoryRepo.findById(categoryId);
+			if (categoryFound.isPresent()) {
+				category = categoryFound.get();
+			}
+		}
+
+		// Get Location
+		Location location = null;
+		if (locationId != null) {
+			Optional<Location> locationFound = locationRepo.findById(locationId);
+			if (locationFound.isPresent()) {
+				location = locationFound.get();
+			}
+		}
+
+		return lostItemRepo.findByTitleAndItemStatusAndDateAndCategoryAndLocation(title, itemStatus, dt, category, location);
+	}
 	public LostItem newLostItem(Map<String, Object> body) {
 
 		// Get foreign key objects
@@ -123,10 +147,4 @@ public class LostItemsComponent
 		}
 		return null;
 	}
-
-	public LostItem[] retrieveByCategory(Category category) {
-		return null;
-	}
-
-
 }

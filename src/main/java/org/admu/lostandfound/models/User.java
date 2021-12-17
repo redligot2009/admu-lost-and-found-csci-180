@@ -30,12 +30,13 @@ public class User {
     @OneToMany(mappedBy = "claimer")
     private Set<Claim> claims;
 
-//    public User(String username, String email, String password, String role) {
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//        this.role = role;
-//    }
+    // no-arg constructor
+    public User(){
+        this.username = null;
+        this.email = null;
+        this.password = null;
+        this.role = null;
+    }
 
     public String getUsername() {
         return username;

@@ -30,6 +30,8 @@ public class User {
     @OneToMany(mappedBy = "claimer")
     private Set<Claim> claims;
 
+    public User() {}
+
     public User(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;

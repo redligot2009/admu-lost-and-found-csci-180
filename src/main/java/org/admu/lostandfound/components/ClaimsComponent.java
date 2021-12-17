@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,32 +29,45 @@ public class ClaimsComponent
 	UserRepository userRepo;
 
 	
-	public Claim createNewClaim(User claimer, LostItem lostItem)
+	public Claim createNewClaim(Map<String, Object> body)
 	{
-		return null;
+		Long item = Long.parseLong(body.get("item_id").toString());
+		Long claimer = Long.parseLong(body.get("claimer_id").toString());
+		LocalDate createdDate = LocalDate.now();
+
+		Optional<User> User = userRepo.findById(claimer);
+		Optional<LostItem> Item = lostItemRepo.findById(item);
+
+		Claim claim = new Claim(
+				User.get(),
+				Item.get(),
+				createdDate
+		);
+		claimRepo.save(claim);
+		return claim;
 	}
 	
-	public Claim closeClaim(Long claimID)
+	public Claim closeClaim(Long claimID) throws RuntimeException
 	{
 		Claim Claim = retrieveClaimByID(claimID);
 		if (Claim != null) {
 			claimRepo.delete(Claim);
 			return Claim;
 		}
-		return null;
+		throw new RuntimeException("Bad Request");
 	}
 
-	public Claim retrieveClaimByID(long claimID)
+	public Claim retrieveClaimByID(long claimID) throws RuntimeException
 	{
 		Optional<Claim> Claim = claimRepo.findById(claimID);
 		if (Claim.isPresent())
 		{
 			return Claim.get();
 		}
-		return null;
+		throw new RuntimeException("Bad Request");
 	}
 	
-	public List<Claim> retrieveClaims(Long claimer, Long item)
+	public List<Claim> retrieveClaims(Long claimer, Long item) throws RuntimeException
 	{
 		Optional<LostItem> LostItem = lostItemRepo.findById(item);
 		Optional<User> User = userRepo.findById(claimer);
@@ -89,14 +101,11 @@ public class ClaimsComponent
 				return claim;
 			}
 		}
-
-		return null;
+		throw new RuntimeException("Bad Request");
 	}
-	
-//	public Claim[] retrieveClaimsByItem(LostItem item)
-//	{
-//		return null;
-//	}
 
 
+// Darren's Notes: Exceptions
+	// If u see null, change to throw
+	// if you don't see a null or return null, just do try catch
 }

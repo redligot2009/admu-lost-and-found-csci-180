@@ -2,6 +2,7 @@ package org.admu.lostandfound.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -22,12 +23,18 @@ public class Claim {
 
     @NotNull
     @Column(name="created_date", nullable = false)
-    private Date createdDate;
+    private LocalDate createdDate;
 
-    public Claim(User claimer, LostItem lostItem, Date createdDate) {
+    public Claim(User claimer, LostItem lostItem, LocalDate createdDate) {
         this.claimer = claimer;
         this.lostItem = lostItem;
         this.createdDate = createdDate;
+    }
+
+    public Claim() {
+        this.claimer = null;
+        this.lostItem = null;
+        this.createdDate = null;
     }
 
     public User getClaimer() {
@@ -46,11 +53,11 @@ public class Claim {
         this.lostItem = lostItem;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }

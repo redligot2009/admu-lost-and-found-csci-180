@@ -16,11 +16,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    // Get full custom User object using UserRepository and build custom UserDetails object
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-
         User user = userRepository.findByUsername(username);
         if(user == null)
         {

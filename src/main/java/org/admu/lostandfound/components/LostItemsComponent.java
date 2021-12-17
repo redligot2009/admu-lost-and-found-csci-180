@@ -31,48 +31,75 @@ public class LostItemsComponent
 	@Autowired
 	private LostItemRepository lostItemRepo;
 
-	public List<LostItem> getLostItems(String title, String itemStatus, String date, Long categoryId, Long locationId) {
-		LocalDate dt = LocalDate.parse(date);
+	// GET All
+	public List<LostItem> getLostItems(
+			String title,
+			String itemStatus,
+			String date,
+			Long categoryId,
+			Long locationId
+	) throws RuntimeException {
+
+		// Get Date
+		LocalDate dt = null;
+		if (date != null) {
+			dt = LocalDate.parse(date);
+		}
 
 		// Get Category
 		Category category = null;
 		if (categoryId != null) {
 			Optional<Category> categoryFound = categoryRepo.findById(categoryId);
-			if (categoryFound.isPresent()) {
-				category = categoryFound.get();
+			if (!categoryFound.isPresent()) {
+				throw new RuntimeException("Invalid Category ID");
 			}
+			category = categoryFound.get();
 		}
 
 		// Get Location
 		Location location = null;
 		if (locationId != null) {
 			Optional<Location> locationFound = locationRepo.findById(locationId);
-			if (locationFound.isPresent()) {
-				location = locationFound.get();
+			if (!locationFound.isPresent()) {
+				throw new RuntimeException("Invalid Location ID");
 			}
+			location = locationFound.get();
 		}
 
 		return lostItemRepo.findByTitleAndItemStatusAndDateAndCategoryAndLocation(title, itemStatus, dt, category, location);
 	}
-	public LostItem newLostItem(Map<String, Object> body) {
+
+	// CREATE
+	public LostItem newLostItem(Map<String, Object> body) throws RuntimeException {
+
+		// Check if there are empty non-null fields
+		if (
+				body.get("title") == null ||
+				body.get("description") == null ||
+				body.get("itemStatus") == null
+		) {
+			throw new RuntimeException("Title, description, and status are required");
+		}
 
 		// Get foreign key objects
 		Location location = null; // null by default
 		if (body.get("locationId") != null) {
 			Long locationId = Long.valueOf(body.get("locationId").toString());
 			Optional<Location> foundLocation = locationRepo.findById(locationId);
-			if (foundLocation.isPresent()) {
-				location = foundLocation.get();
+			if (!foundLocation.isPresent()) {
+				throw new RuntimeException("Invalid Location ID");
 			}
+			location = foundLocation.get();
 		}
 
 		Category category = null; // null by default
 		if (body.get("categoryId") != null) {
 			Long categoryId = Long.valueOf(body.get("categoryId").toString());
 			Optional<Category> foundCategory = categoryRepo.findById(categoryId);
-			if (foundCategory.isPresent()) {
-				category = foundCategory.get();
+			if (!foundCategory.isPresent()) {
+				throw new RuntimeException("Invalid Category ID");
 			}
+			category = foundCategory.get();
 		}
 
 		// Save new lost item
@@ -88,43 +115,55 @@ public class LostItemsComponent
 		lostItemRepo.save(lostItem);
 		return lostItem;
 	}
-	public LostItem getLostItemByID(Long id) {
+
+	// GET One
+	public LostItem getLostItemByID(Long id) throws RuntimeException {
 		Optional<LostItem> lostItem = lostItemRepo.findById(id);
-		if (lostItem.isPresent()) {
-			return lostItem.get();
+		if (!lostItem.isPresent()) {
+			throw new RuntimeException("No LostItem Found");
 		}
-		return null;
+		return lostItem.get();
 	}
-	public LostItem updateLostItemByID(Long id, Map<String, Object> body) {
+
+	// PUT
+	public LostItem updateLostItemByID(Long id, Map<String, Object> body) throws RuntimeException {
+
+		// Check if there are empty non-null fields
+		if (
+				body.get("title") == null ||
+				body.get("description") == null ||
+				body.get("itemStatus") == null
+		) {
+			throw new RuntimeException("Title, description, and status are required");
+		}
 
 		// Get foreign keys objects
 		Location location = null; // null by default
 		if (body.get("locationId") != null) {
 			Long locationId = Long.valueOf(body.get("locationId").toString());
 			Optional<Location> foundLocation = locationRepo.findById(locationId);
-			if (foundLocation.isPresent()) {
-				location = foundLocation.get();
+			if (!foundLocation.isPresent()) {
+				throw new RuntimeException("Invalid Location ID");
 			}
+			location = foundLocation.get();
 		}
 
 		Category category = null; // null by default
 		if (body.get("categoryId") != null) {
 			Long categoryId = Long.valueOf(body.get("categoryId").toString());
 			Optional<Category> foundCategory = categoryRepo.findById(categoryId);
-			if (foundCategory.isPresent()) {
-				category = foundCategory.get();
+			if (!foundCategory.isPresent()) {
+				throw new RuntimeException("Invalid Category ID");
 			}
+			category = foundCategory.get();
 		}
 
-		// Get existing row
+		// Get existing item
 		Optional<LostItem> foundLostItem = lostItemRepo.findById(id);
-		LostItem lostItem;
-
-		if (foundLostItem.isPresent()) {
-			lostItem = foundLostItem.get();
-		} else {
-			return null; // just return null if it doesn't exist
+		if (!foundLostItem.isPresent()) {
+			throw new RuntimeException("LostItem not found");
 		}
+		LostItem lostItem = foundLostItem.get();
 
 		// set new fields
 		lostItem.setTitle(body.get("title").toString());
@@ -139,12 +178,14 @@ public class LostItemsComponent
 		LostItem savedItem = lostItemRepo.save(lostItem);
 		return savedItem;
 	}
-	public LostItem deleteLostItemByID(Long id) {
+
+	// DELETE
+	public LostItem deleteLostItemByID(Long id) throws RuntimeException {
 		LostItem lostItem = getLostItemByID(id);
-		if (lostItem != null) {
-			lostItemRepo.delete(lostItem);
-			return lostItem;
+		if (lostItem == null) {
+			throw new RuntimeException("No LostItem Found");
 		}
-		return null;
+		lostItemRepo.delete(lostItem);
+		return lostItem;
 	}
 }

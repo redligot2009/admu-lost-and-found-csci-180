@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
@@ -21,42 +22,67 @@ public class LostItemsController {
 	@GET
 	@Path("/postings")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<LostItem> getLostItems(
+	public Response getLostItems(
 			@QueryParam("title") String title,
 			@QueryParam("itemStatus") String itemStatus,
 			@QueryParam("date") String date,
 			@QueryParam("categoryId") Long categoryId,
 			@QueryParam("locationId") Long locationId
 	) {
-		return lostItemsComponent.getLostItems(title, itemStatus, date, categoryId, locationId);
+		try {
+			List<LostItem> lostItem = lostItemsComponent.getLostItems(title, itemStatus, date, categoryId, locationId);
+			return Response.ok(lostItem).build();
+		} catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
+		}
 	}
 	
 	@POST
 	@Path("/postings")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public LostItem newLostItem(@RequestBody Map<String,Object> body) {
-		return lostItemsComponent.newLostItem(body);
+	public Response newLostItem(@RequestBody Map<String,Object> body) {
+		try {
+			LostItem lostItem = lostItemsComponent.newLostItem(body);
+			return Response.ok(lostItem).build();
+		} catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
+		}
 	}
 
 	@GET
 	@Path("/postings/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public LostItem getLostItemByID(@PathParam("id") Long id) {
-		return lostItemsComponent.getLostItemByID(id);
+	public Response getLostItemByID(@PathParam("id") Long id) {
+		try {
+			LostItem lostItem = lostItemsComponent.getLostItemByID(id);
+			return Response.ok(lostItem).build();
+		} catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
+		}
 	}
 
 	@PUT
 	@Path("/postings/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public LostItem updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
-		return lostItemsComponent.updateLostItemByID(id, body);
+	public Response updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
+		try {
+			LostItem lostItem = lostItemsComponent.updateLostItemByID(id, body);
+			return Response.ok(lostItem).build();
+		} catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
+		}
 	}
 
 	@DELETE
 	@Path("/postings/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public LostItem deleteLostItemByID(@PathParam("id") Long id) {
-		return lostItemsComponent.deleteLostItemByID(id);
+	public Response deleteLostItemByID(@PathParam("id") Long id) {
+		try {
+			LostItem lostItem = lostItemsComponent.deleteLostItemByID(id);
+			return Response.ok(lostItem).build();
+		} catch (Exception e) {
+			return Response.status(400).entity(e.getMessage()).build();
+		}
 	}
 }

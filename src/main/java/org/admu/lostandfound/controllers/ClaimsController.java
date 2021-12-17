@@ -27,26 +27,8 @@ public class ClaimsController
     public List<Claim> getClaims(@QueryParam("item_id") Long item,
                                  @QueryParam("user_id") Long claimer)
     {
-        // Case 1: Only item
-        if ((item != null) && (claimer == null))
-        {
-            List<Claim> claims = claimsComp.retrieveClaimsByItem(item);
-            return claims;
-        }
-
-        // Case 2: Only claimer
-        else if ((item == null) && (claimer != null))
-        {
-            List<Claim> claims = claimsComp.retrieveClaimsByClaimer(claimer);
-            return claims;
-        }
-
-        // Case 3: Both passed
-        else if ((item != null) && (claimer != null))
-        {
-            List<Claim> claims = claimsComp.retrieveClaimByID(claimID);
-            return claims;
-        }
+        List<Claim> claim = claimsComp.retrieveClaims(item, claimer);
+        return claim;
     }
 
     @DELETE

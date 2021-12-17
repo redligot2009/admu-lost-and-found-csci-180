@@ -11,4 +11,5 @@ import java.util.List;
 public interface ClaimRepository extends JpaRepository<Claim, Long> {
     public List<Claim> findByClaimer(User claimer);
     public List<Claim> findByLostItem(LostItem item);
+    public List<Claim> findByClaimerAndLostItem(User claimer, LostItem item);
 }

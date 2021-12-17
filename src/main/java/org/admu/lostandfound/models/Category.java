@@ -29,11 +29,19 @@ public class Category {
     @Column(name="updated_date")
     private LocalDate updatedDate;
 
-//    public Category(String title, User admin, LocalDate createdDate) {
-//        this.title = title;
-//        this.admin = admin;
-//        this.createdDate = createdDate;
-//    }
+    public Category(String title, User admin, LocalDate createdDate) {
+        this.title = title;
+        this.admin = admin;
+        this.createdDate = createdDate;
+    }
+
+    // no-arg constructor
+    public Category() {
+        this.title = null;
+        this.admin = null;
+        this.createdDate = null;
+        this.updatedDate = null;
+    }
 
     public Long getId() {
         return id;

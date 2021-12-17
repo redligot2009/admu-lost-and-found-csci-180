@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @Path("/Claims")
@@ -22,11 +24,29 @@ public class ClaimsController
     @GET
     @Path("/claiming")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getClaims(@QueryParam("item_id") Long item,
-                            @QueryParam("user_id") Long claimer)
+    public List<Claim> getClaims(@QueryParam("item_id") Long item,
+                                 @QueryParam("user_id") Long claimer)
     {
-        return "Here's your claim";
-        // Doesn't account for all Cases yet
+        // Case 1: Only item
+        if ((item != null) && (claimer == null))
+        {
+            List<Claim> claims = claimsComp.retrieveClaimsByItem(item);
+            return claims;
+        }
+
+        // Case 2: Only claimer
+        else if ((item == null) && (claimer != null))
+        {
+            List<Claim> claims = claimsComp.retrieveClaimsByClaimer(claimer);
+            return claims;
+        }
+
+        // Case 3: Both passed
+        else if ((item != null) && (claimer != null))
+        {
+            List<Claim> claims = claimsComp.retrieveClaimByID(claimID);
+            return claims;
+        }
     }
 
     @DELETE

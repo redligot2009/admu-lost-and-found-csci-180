@@ -37,6 +37,15 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.claims = claims;
+    }
+
+    // no-arg constructor
+    public User(){
+        this.username = null;
+        this.email = null;
+        this.password = null;
+        this.role = null;
     }
 
     public String getUsername() {

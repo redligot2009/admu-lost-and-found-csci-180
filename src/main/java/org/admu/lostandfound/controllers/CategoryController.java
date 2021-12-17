@@ -2,6 +2,7 @@ package org.admu.lostandfound.controllers;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.admu.lostandfound.components.CategoryComponent;
 import org.admu.lostandfound.models.Category;
@@ -23,10 +24,17 @@ public class CategoryController {
 	@GET
 	@Path("/category")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Category> getCategoryByTitle(@QueryParam("title") String title) {
+	public Response getCategoryByTitle(@QueryParam("title") String title) {
 
-		List<Category> categories = categoryComponent.getCategory(title);
-		return categories;
+		try {
+			List<Category> categories = categoryComponent.getCategory(title);
+			return Response.ok(categories).build();
+		} catch(Exception e){
+			return Response.status(404)
+					.entity(e.getMessage())
+					.build();
+		}
+
 
 	}
 
@@ -39,25 +47,40 @@ public class CategoryController {
 		LocalDate currentDate = LocalDate.now();
 		Category postCategory = categoryComponent.createNewCategory(body, currentDate);
 		return postCategory;
+
 	}
 	
 	@PUT
 	@Path("/category/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Category updateCategory(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
+	public Response updateCategory(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
 
-		Category putCategory = categoryComponent.putCategory(id, body);
-		return putCategory;
+		try{
+			Category putCategory = categoryComponent.putCategory(id, body);
+			return Response.ok(putCategory).build();
+		} catch(Exception e) {
+			return  Response.status(404)
+					.entity(e.getMessage())
+					.build();
+		}
+
 
 	}
 	
 	@DELETE
 	@Path("/category/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Category deleteCategory(@PathParam("id") Long id) {
+	public Response deleteCategory(@PathParam("id") Long id) {
 
-		Category deletedCategory = categoryComponent.deleteCategory(id);
-		return deletedCategory;
+		try{
+			Category deletedCategory = categoryComponent.deleteCategory(id);
+			return Response.ok(deletedCategory).build();
+		} catch(Exception e) {
+			return Response.status(404)
+					.entity(e.getMessage())
+					.build();
+		}
+
 	}
 }

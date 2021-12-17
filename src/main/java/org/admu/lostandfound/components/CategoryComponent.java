@@ -24,7 +24,7 @@ public class CategoryComponent
 	@Autowired
 	UserRepository userRepository;
 
-	public List<Category> getCategory(String title){
+	public List<Category> getCategory(String title) throws RuntimeException{
 
 		if(title==null){
 			List<Category> foundCategories = categoryRepository.findAll();
@@ -34,55 +34,69 @@ public class CategoryComponent
 		List<Category> foundCategories = new ArrayList<>();
 		Category foundCategory = categoryRepository.findByTitle(title);
 		foundCategories.add(foundCategory);
+
+		if(foundCategory==null){
+			throw new RuntimeException("No category found with that title");
+		}
+
 		return foundCategories;
 
 	}
 
 	public Category createNewCategory(Map<String, Object> body, LocalDate createdDate)
 	{
-		System.out.print("here");
-		Long admin = Long.parseLong(body.get("admin").toString());
-		String title = body.get("title").toString();
+		try{
+			Long admin = Long.parseLong(body.get("admin").toString());
+			String title = body.get("title").toString();
 
-		Optional<User> foundAdmin = userRepository.findById(admin);
+			Optional<User> foundAdmin = userRepository.findById(admin);
 
-		//Makes sure admin has a valid user id
-		if(foundAdmin.isPresent()){
-			Category newCategory = new Category();
-			newCategory.setTitle(title);
-			newCategory.setAdmin(foundAdmin.get());
-			newCategory.setCreatedDate(createdDate);
-			newCategory.setUpdatedDate(createdDate);
-			newCategory = categoryRepository.save(newCategory);
-			return newCategory;
+			//Makes sure admin has a valid user id
+			if(foundAdmin.isPresent()){
+				Category newCategory = new Category();
+				newCategory.setTitle(title);
+				newCategory.setAdmin(foundAdmin.get());
+				newCategory.setCreatedDate(createdDate);
+				newCategory.setUpdatedDate(createdDate);
+				newCategory = categoryRepository.save(newCategory);
+				return newCategory;
+			}
+
+			throw new RuntimeException("No Admin found with that ID");
+		} catch(Exception e){
+			throw new RuntimeException("Bad Request");
 		}
 
-		return null;
 	}
 
-	public Category putCategory(Long id, Map<String, Object> body){
+	public Category putCategory(Long id, Map<String, Object> body) throws RuntimeException{
 
-		System.out.print("SAVED");
 		Long admin = Long.parseLong(body.get("admin").toString());
 		String title = body.get("title").toString();
 
 		Optional<Category> savedCategory = categoryRepository.findById(id);
 		Optional<User> savedAdmin = userRepository.findById(admin);
 
+		if(!savedAdmin.isPresent()){
+			throw new RuntimeException("Admin ID not found");
+		}
+
 		if(savedCategory.isPresent()){
-			System.out.print("SAVED");
 			Category updateCategory = savedCategory.get();
 			updateCategory.setTitle(title);
 			updateCategory.setAdmin(savedAdmin.get());
 			updateCategory.setUpdatedDate(LocalDate.now());
 			updateCategory = categoryRepository.save(updateCategory);
 			return updateCategory;
+		} else {
+			throw new RuntimeException("Category Not Found");
 		}
 
-		return null;
+
+
 	}
 
-	public Category deleteCategory(Long id){
+	public Category deleteCategory(Long id) throws RuntimeException{
 
 		Optional<Category> category = categoryRepository.findById(id);
 
@@ -92,7 +106,7 @@ public class CategoryComponent
 			return deletedCategory;
 		}
 
-		return null;
+		throw new RuntimeException("Category not found. No categories deleted.");
 	}
 
 }

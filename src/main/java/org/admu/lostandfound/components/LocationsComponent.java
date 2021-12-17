@@ -17,33 +17,46 @@ public class LocationsComponent
 	@Autowired
 	LocationRepository locationRepo;
 	
-	public List<Location> getLocation(String buildingName, String roomName)
+	public List<Location> getLocation(String buildingName, String roomName) throws RuntimeException
 	{
-
+		// returns a list of all locations
 		if(buildingName==null && roomName==null){
 			List<Location> foundLocations = locationRepo.findAll();
 			return foundLocations;
 		}
+
+		// returns a list containing a single location
 		List<Location> foundLocations = new ArrayList<>();
 		Location foundLocation = locationRepo.findByBuildingNameAndRoomName(buildingName,roomName);
 		foundLocations.add(foundLocation);
+
+		if(foundLocation == null){
+			throw new RuntimeException("No location found");
+		}
+
 		return foundLocations;
 
-	}
-	
-	public Location postLocation(String title, String buildingName, String roomName, String description)
-	{
-		Location newLocation = new Location();
-		newLocation.setTitle(title);
-		newLocation.setBuildingName(buildingName);
-		newLocation.setRoomName(roomName);
-		newLocation.setDescription(description);
 
-		newLocation = locationRepo.save(newLocation);
-		return newLocation;
 	}
 	
-	public Location putLocation(Long id, String buildingName, String roomName)
+	public Location postLocation(String title, String buildingName, String roomName, String description) throws RuntimeException
+	{
+		try{
+			Location newLocation = new Location();
+			newLocation.setTitle(title);
+			newLocation.setBuildingName(buildingName);
+			newLocation.setRoomName(roomName);
+			newLocation.setDescription(description);
+
+			newLocation = locationRepo.save(newLocation);
+			return newLocation;
+		} catch (Exception e){
+			throw new RuntimeException("Bad Request");
+		}
+
+	}
+	
+	public Location putLocation(Long id, String buildingName, String roomName) throws RuntimeException
 	{
 
 		Optional<Location> savedLocation = locationRepo.findById(id);
@@ -56,10 +69,10 @@ public class LocationsComponent
 			return updateLocation;
 		}
 
-		return savedLocation.orElse(null);
+		throw new RuntimeException("Location not found");
 	}
 	
-	public Location deleteLocation(Long id)
+	public Location deleteLocation(Long id) throws RuntimeException
 	{
 		Optional<Location> deleteLocation = locationRepo.findById(id);
 
@@ -67,7 +80,8 @@ public class LocationsComponent
 			locationRepo.deleteById(id);
 			return deleteLocation.get();
 		}
-		return null;
+
+		throw new RuntimeException("Location not found. No location deleted.");
 	}
 	
 }

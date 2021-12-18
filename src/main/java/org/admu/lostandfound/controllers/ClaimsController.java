@@ -1,39 +1,77 @@
 package org.admu.lostandfound.controllers;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
+import org.admu.lostandfound.components.ClaimsComponent;
+import org.admu.lostandfound.models.Claim;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
+
 @Component
-@Path("/api")
-public class ClaimsController {
-	
-	
-	@GET
+@Path("/Claims")
+public class ClaimsController
+{
+    @Autowired
+    ClaimsComponent claimsComp;
+
+
+    @GET
+    @Path("/claiming")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClaims(@QueryParam("item_id") Long item,
+                              @QueryParam("user_id") Long claimer)
+    {
+        try{
+            List<Claim> claim = claimsComp.retrieveClaims(item, claimer);
+            return Response.ok(claim).build();
+        }catch (Exception e){
+            return Response.status(400)
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Path("/claims/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteClaims(@PathParam("id") Long claimID)
+    {
+        try {
+            return Response.ok(claimsComp.closeClaim(claimID)).build();
+        }catch (Exception e){
+            return Response.status(400)
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+
+    @POST
 	@Path("/claims")
-	public String getClaims () {
-		return "Here's your claim";
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public Response postClaim(Map<String, Object> body)
+    {
+        try {
+            Claim newClaim = claimsComp.createNewClaim(body);
+            return Response.ok(newClaim).build();
+        }catch (Exception e){
+            return Response.status(400)
+                    .entity(e.getMessage())
+                    .build();
+        }
 	}
-	
-	@DELETE
-	@Path("/claims/{id}")
-	public String deleteClaims (@PathParam("id") Integer id) {
-		return "Claim deleted";
-	}
-	
-	@POST
-	@Path("/claims")
-	public String postClaim () {
-		return "Claim posted" ;
-	}
-	
-	@GET
-	@Path("/my_claims")
-	public String myClaims() {
-		return "my claims";
-	}
+
+	// Need authentication for this. No exceptions yet.
+    @GET
+    @Path("/my_claims")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String myClaims(@QueryParam("item_id") Long item)
+    {
+        return "my claims";
+    }
+
 }

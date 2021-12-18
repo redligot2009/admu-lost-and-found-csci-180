@@ -82,6 +82,13 @@ public class User {
     }
 
     public void setRole(String role) {
-        this.role = role;
+        if(role == "user")
+        {
+            this.role = "ROLE_USER";
+        }
+        else if(role =="admin")
+        {
+            this.role = "ROLE_ADMIN";
+        }
     }
 }

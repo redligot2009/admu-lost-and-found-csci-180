@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 import org.admu.lostandfound.components.CategoryComponent;
 import org.admu.lostandfound.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,6 +25,7 @@ public class CategoryController {
 	@GET
 	@Path("/category")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response getCategoryByTitle(@QueryParam("title") String title) {
 
 		try {
@@ -42,6 +44,7 @@ public class CategoryController {
 	@Path("/category")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Category newCategory(@RequestBody Map<String,Object> body) {
 
 		LocalDate currentDate = LocalDate.now();
@@ -49,7 +52,8 @@ public class CategoryController {
 		return postCategory;
 
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PUT
 	@Path("/category/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -67,10 +71,11 @@ public class CategoryController {
 
 
 	}
-	
+
 	@DELETE
 	@Path("/category/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response deleteCategory(@PathParam("id") Long id) {
 
 		try{

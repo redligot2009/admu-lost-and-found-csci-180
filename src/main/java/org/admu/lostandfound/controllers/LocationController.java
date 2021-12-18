@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 import org.admu.lostandfound.components.LocationsComponent;
 import org.admu.lostandfound.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,6 +26,7 @@ public class LocationController {
 	@GET
 	@Path("/location")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response getLocation(@QueryParam("buildingName") String buildingName,
 								@QueryParam("roomName") String roomName) {
 
@@ -43,6 +45,7 @@ public class LocationController {
 	@Path("/location")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response newLocation(@RequestBody Location locationReq) {
 
 		try{
@@ -63,6 +66,7 @@ public class LocationController {
 	@Path("/location/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response updateLocationById(@PathParam("id") Long id, @RequestBody Location locationReq) {
 
 
@@ -81,6 +85,7 @@ public class LocationController {
 	@DELETE
 	@Path("/location/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response deleteLocationById(@PathParam("id") Long id) {
 
 		try{

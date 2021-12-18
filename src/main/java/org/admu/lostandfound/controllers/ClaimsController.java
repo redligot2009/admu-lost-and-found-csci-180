@@ -6,6 +6,7 @@ import org.admu.lostandfound.models.User;
 import org.admu.lostandfound.models.UserDetailsImpl;
 import org.admu.lostandfound.payload.ClaimResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -111,6 +112,7 @@ public class ClaimsController
 	@Path("/claims")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize("hasRole('USER')")
 	public Response postClaim(Map<String, Object> body)
     {
         try {
@@ -129,10 +131,10 @@ public class ClaimsController
         }
 	}
 
-	// Need authentication for this. No exceptions yet.
     @GET
     @Path("/my_claims")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize("hasRole('USER')")
     public Response getMyClaims(@QueryParam("item_id") Long item)
     {
         try{

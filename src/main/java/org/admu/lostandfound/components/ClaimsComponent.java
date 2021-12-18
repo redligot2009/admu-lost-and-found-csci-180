@@ -85,16 +85,15 @@ public class ClaimsComponent
 		Optional<User> user = null;
 		Optional<LostItem> lostItem = null;
 
-		/* Debug logs
+		// Debug logs
 		if(itemId != null) {
-			System.out.println("Item ID: " + itemId.toString());
+			//System.out.println("Item ID: " + itemId.toString());
 			lostItem = lostItemRepo.findById(itemId);
 		}
 		if(claimerId != null) {
-			System.out.println("Claimer ID: " + claimerId.toString());
+			//System.out.println("Claimer ID: " + claimerId.toString());
 			user = userRepo.findById(claimerId);
 		}
-		*/
 
 		// Case 1: Only item
 		if ((lostItem != null) && (user == null))
@@ -107,11 +106,11 @@ public class ClaimsComponent
 			}
 		}
 		// Case 2: Only claimer
-		else if ((itemId == null) && (claimerId != null))
+		else if ((lostItem == null) && (user != null))
 		{
 			//System.out.println("Case 2: Only claimer");
 			List<Claim> claim = claimRepo.findByClaimer(user.get());
-			if (claim.size() > 0)
+			if (claim.size() > 0 && claim != null)
 			{
 				return claim;
 			}
@@ -121,7 +120,7 @@ public class ClaimsComponent
 			}
 		}
 		// Case 3: Both passed
-		else if ((itemId != null) && (claimerId != null))
+		else if ((lostItem != null) && (user != null))
 		{
 			//System.out.println("Case 3: Both passed");
 			List<Claim> claim = claimRepo.findByClaimerAndLostItem(user.get(), lostItem.get());

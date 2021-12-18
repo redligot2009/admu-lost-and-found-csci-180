@@ -4,6 +4,7 @@ import org.admu.lostandfound.components.LostItemsComponent;
 import org.admu.lostandfound.models.LostItem;
 import org.admu.lostandfound.payload.LostItemResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,6 +60,7 @@ public class LostItemsController {
 	@Path("/postings")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response newLostItem(@RequestBody Map<String,Object> body) {
 		try {
 			LostItem lostItem = lostItemsComponent.newLostItem(body);
@@ -105,6 +107,7 @@ public class LostItemsController {
 	@PUT
 	@Path("/postings/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response updateLostItemByID(@PathParam("id") Long id, @RequestBody Map<String,Object> body) {
 		try {
 			LostItem lostItem = lostItemsComponent.updateLostItemByID(id, body);
@@ -128,6 +131,7 @@ public class LostItemsController {
 	@DELETE
 	@Path("/postings/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ADMIN')")
 	public Response deleteLostItemByID(@PathParam("id") Long id) {
 		try {
 			LostItem lostItem = lostItemsComponent.deleteLostItemByID(id);

@@ -37,7 +37,7 @@ public class LostItem {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    @OneToMany(mappedBy = "lostItem", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "lostItem", fetch=FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Claim> claims;
 
     @ManyToOne

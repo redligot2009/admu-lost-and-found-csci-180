@@ -1,5 +1,7 @@
 package org.admu.lostandfound.models;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -16,11 +18,12 @@ public class Claim {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "claimer_id")
     private User claimer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "lost_item_id")
     private LostItem lostItem;
 
@@ -38,6 +41,10 @@ public class Claim {
         this.claimer = null;
         this.lostItem = null;
         this.createdDate = null;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public User getClaimer() {

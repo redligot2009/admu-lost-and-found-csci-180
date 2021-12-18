@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LostItemResponse {
@@ -34,6 +35,7 @@ public class LostItemResponse {
         this.time = time;
         this.location = location;
         this.category = category;
+        claims = new HashSet<>();
         for (Claim claim: originalClaims) {
             User claimer = claim.getClaimer();
             claims.add(new NestedClaimResponse(claim.getId(),claimer.getUsername(),claimer.getId()));
@@ -100,8 +102,11 @@ public class LostItemResponse {
         return claims;
     }
 
-    public void setClaims(Set<NestedClaimResponse> claims) {
-        this.claims = claims;
+    public void setClaims(Set<Claim> originalClaims) {
+        for (Claim claim: originalClaims) {
+            User claimer = claim.getClaimer();
+            claims.add(new NestedClaimResponse(claim.getId(),claimer.getUsername(),claimer.getId()));
+        }
     }
 
     public Category getCategory() {

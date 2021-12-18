@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,7 +37,7 @@ public class LostItem {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    @OneToMany(mappedBy = "lostItem")
+    @OneToMany(mappedBy = "lostItem", fetch=FetchType.EAGER)
     private Set<Claim> claims;
 
     @ManyToOne
@@ -61,6 +62,19 @@ public class LostItem {
         this.time = time;
         this.location = location;
         this.category = category;
+        this.claims = new HashSet<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Set<Claim> getClaims() {
+        return claims;
+    }
+
+    public void setClaims(Set<Claim> claims) {
+        this.claims = claims;
     }
 
     public String getTitle() {

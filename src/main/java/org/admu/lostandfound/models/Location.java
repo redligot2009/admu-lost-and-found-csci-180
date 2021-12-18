@@ -25,7 +25,7 @@ public class Location {
 
     @Column(name = "description", nullable = true)
     private String description;
-    
+  
     public Location(String title, String roomName, String buildingName, String description) {
         this.title = title;
         this.roomName = roomName;
@@ -40,7 +40,6 @@ public class Location {
         this.buildingName = null;
         this.description = null;
     }
-
 
     public Long getId() {
         return id;

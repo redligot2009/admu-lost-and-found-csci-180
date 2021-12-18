@@ -1,9 +1,12 @@
 package org.admu.lostandfound.models;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Transactional
 @Entity
 @Table(name="claims")
 public class Claim {
@@ -12,11 +15,11 @@ public class Claim {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "claimer_id")
     private User claimer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lost_item_id")
     private LostItem lostItem;
 

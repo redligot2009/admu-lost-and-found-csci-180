@@ -1,9 +1,12 @@
 package org.admu.lostandfound.models;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
+@Transactional
 @Entity
 @Table(name="users")
 public class User {
@@ -44,6 +47,10 @@ public class User {
         this.email = null;
         this.password = null;
         this.role = null;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {

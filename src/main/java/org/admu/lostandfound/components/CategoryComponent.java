@@ -8,9 +8,11 @@ import java.util.Optional;
 
 import org.admu.lostandfound.models.Category;
 import org.admu.lostandfound.models.User;
+import org.admu.lostandfound.models.UserDetailsImpl;
 import org.admu.lostandfound.repositories.CategoryRepository;
 import org.admu.lostandfound.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,10 +48,11 @@ public class CategoryComponent
 	public Category createNewCategory(Map<String, Object> body, LocalDate createdDate)
 	{
 		try{
-			Long admin = Long.parseLong(body.get("admin").toString());
+			UserDetailsImpl currentUser = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 			String title = body.get("title").toString();
 
-			Optional<User> foundAdmin = userRepository.findById(admin);
+			Optional<User> foundAdmin = userRepository.findById(currentUser.getId());
 
 			//Makes sure admin has a valid user id
 			if(foundAdmin.isPresent()){
@@ -62,7 +65,7 @@ public class CategoryComponent
 				return newCategory;
 			}
 
-			throw new RuntimeException("No Admin found with that ID");
+			throw new RuntimeException("You are not a valid admin user");
 		} catch(Exception e){
 			throw new RuntimeException("Bad Request");
 		}
@@ -71,14 +74,15 @@ public class CategoryComponent
 
 	public Category putCategory(Long id, Map<String, Object> body) throws RuntimeException{
 
-		Long admin = Long.parseLong(body.get("admin").toString());
+		UserDetailsImpl currentUser = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		String title = body.get("title").toString();
 
 		Optional<Category> savedCategory = categoryRepository.findById(id);
-		Optional<User> savedAdmin = userRepository.findById(admin);
+		Optional<User> savedAdmin = userRepository.findById(currentUser.getId());
 
 		if(!savedAdmin.isPresent()){
-			throw new RuntimeException("Admin ID not found");
+			throw new RuntimeException("You are not a valid admin user");
 		}
 
 		if(savedCategory.isPresent()){
@@ -91,8 +95,6 @@ public class CategoryComponent
 		} else {
 			throw new RuntimeException("Category Not Found");
 		}
-
-
 
 	}
 

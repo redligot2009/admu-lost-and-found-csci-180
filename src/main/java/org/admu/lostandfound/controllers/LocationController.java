@@ -9,6 +9,7 @@ import org.admu.lostandfound.components.LocationsComponent;
 import org.admu.lostandfound.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class LocationController {
 	@Path("/location")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response newLocation(Location locationReq) {
+	public Response newLocation(@RequestBody Location locationReq) {
 
 		try{
 			Location location = locationsComponent.postLocation(
@@ -62,11 +63,11 @@ public class LocationController {
 	@Path("/location/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getLocationById(@PathParam("id") Long id, Location locationReq) {
+	public Response updateLocationById(@PathParam("id") Long id, @RequestBody Location locationReq) {
 
 
 		try {
-			Location location = locationsComponent.putLocation(id,locationReq.getBuildingName(), locationReq.getRoomName());
+			Location location = locationsComponent.putLocation(id,locationReq);
 			return Response.ok(location).build();
 		} catch (Exception e){
 			return Response.status(404)

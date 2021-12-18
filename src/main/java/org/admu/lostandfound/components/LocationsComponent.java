@@ -56,15 +56,17 @@ public class LocationsComponent
 
 	}
 	
-	public Location putLocation(Long id, String buildingName, String roomName) throws RuntimeException
+	public Location putLocation(Long id, Location locationReq) throws RuntimeException
 	{
 
 		Optional<Location> savedLocation = locationRepo.findById(id);
 
 		if(savedLocation.isPresent()){
 			Location updateLocation = savedLocation.get();
-			updateLocation.setBuildingName(buildingName);
-			updateLocation.setRoomName(roomName);
+			updateLocation.setBuildingName(locationReq.getBuildingName());
+			updateLocation.setRoomName(locationReq.getRoomName());
+			updateLocation.setTitle(locationReq.getTitle());
+			updateLocation.setDescription(locationReq.getDescription());
 			updateLocation = locationRepo.save(updateLocation);
 			return updateLocation;
 		}

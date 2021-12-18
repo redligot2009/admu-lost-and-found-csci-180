@@ -31,16 +31,16 @@ public class ClaimsComponent
 	
 	public Claim createNewClaim(Map<String, Object> body)
 	{
-		Long item = Long.parseLong(body.get("item_id").toString());
-		Long claimer = Long.parseLong(body.get("claimer_id").toString());
+		Long itemId = Long.parseLong(body.get("item_id").toString());
+		Long claimerId = Long.parseLong(body.get("claimer_id").toString());
 		LocalDate createdDate = LocalDate.now();
 
-		Optional<User> User = userRepo.findById(claimer);
-		Optional<LostItem> Item = lostItemRepo.findById(item);
+		Optional<User> user = userRepo.findById(claimerId);
+		Optional<LostItem> lostItem = lostItemRepo.findById(itemId);
 
 		Claim claim = new Claim(
-				User.get(),
-				Item.get(),
+				user.get(),
+				lostItem.get(),
 				createdDate
 		);
 		claimRepo.save(claim);
@@ -49,33 +49,33 @@ public class ClaimsComponent
 	
 	public Claim closeClaim(Long claimID) throws RuntimeException
 	{
-		Claim Claim = retrieveClaimByID(claimID);
-		if (Claim != null) {
-			claimRepo.delete(Claim);
-			return Claim;
+		Claim claim = retrieveClaimByID(claimID);
+		if (claim != null) {
+			claimRepo.delete(claim);
+			return claim;
 		}
 		throw new RuntimeException("Bad Request");
 	}
 
 	public Claim retrieveClaimByID(long claimID) throws RuntimeException
 	{
-		Optional<Claim> Claim = claimRepo.findById(claimID);
-		if (Claim.isPresent())
+		Optional<Claim> claim = claimRepo.findById(claimID);
+		if (claim.isPresent())
 		{
-			return Claim.get();
+			return claim.get();
 		}
 		throw new RuntimeException("Bad Request");
 	}
 	
-	public List<Claim> retrieveClaims(Long claimer, Long item) throws RuntimeException
+	public List<Claim> retrieveClaims(Long claimerId, Long itemId) throws RuntimeException
 	{
-		Optional<LostItem> LostItem = lostItemRepo.findById(item);
-		Optional<User> User = userRepo.findById(claimer);
+		Optional<LostItem> lostItem = lostItemRepo.findById(itemId);
+		Optional<User> user = userRepo.findById(claimerId);
 
 		// Case 1: Only item
-		if ((item != null) && (claimer == null))
+		if ((itemId != null) && (claimerId == null))
 		{
-			List<Claim> claim = claimRepo.findByLostItem(LostItem.get());
+			List<Claim> claim = claimRepo.findByLostItem(lostItem.get());
 			if (claim.size() > 0)
 			{
 				return claim;
@@ -83,9 +83,9 @@ public class ClaimsComponent
 		}
 
 		// Case 2: Only claimer
-		else if ((item == null) && (claimer != null))
+		else if ((itemId == null) && (claimerId != null))
 		{
-			List<Claim> claim = claimRepo.findByClaimer(User.get());
+			List<Claim> claim = claimRepo.findByClaimer(user.get());
 			if (claim.size() > 0)
 			{
 				return claim;
@@ -93,9 +93,9 @@ public class ClaimsComponent
 		}
 
 		// Case 3: Both passed
-		else if ((item != null) && (claimer != null))
+		else if ((itemId != null) && (claimerId != null))
 		{
-			List<Claim> claim = claimRepo.findByClaimerAndLostItem(User.get(), LostItem.get());
+			List<Claim> claim = claimRepo.findByClaimerAndLostItem(user.get(), lostItem.get());
 			if (claim.size() == 1)
 			{
 				return claim;

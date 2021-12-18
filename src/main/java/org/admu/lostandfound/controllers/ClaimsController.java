@@ -20,7 +20,7 @@ public class ClaimsController
 
 
     @GET
-    @Path("/claiming")
+    @Path("/claims/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getClaims(@QueryParam("item_id") Long item,
                               @QueryParam("user_id") Long claimer)
